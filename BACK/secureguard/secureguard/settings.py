@@ -116,6 +116,7 @@ REST_FRAMEWORK = {
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': datetime.timedelta(minutes=60),
     'REFRESH_TOKEN_LIFETIME': datetime.timedelta(days=7),
+    "TOKEN_OBTAIN_SERIALIZER": "user.api.serializer.CustmoTokenObtainPairSerializer"
 }
 
 
