@@ -1,10 +1,9 @@
 
-
 function App() {
 
   return (
     <>
-      <h1>Plantilla</h1>
+      <h1 className='texxt-2xl'>Plantilla</h1>
     </>
   )
 }
