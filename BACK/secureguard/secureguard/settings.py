@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/5.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
-
+import datetime
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -37,6 +37,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'drf_yasg',
+    'rest_framework',
+    'user',
+    'assets',
 ]
 
 MIDDLEWARE = [
@@ -108,6 +112,24 @@ AUTH_PASSWORD_VALIDATORS = [
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
 
 LANGUAGE_CODE = 'en-us'
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    )
+}
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': datetime.timedelta(minutes=60),
+    'REFRESH_TOKEN_LIFETIME': datetime.timedelta(days=7),
+    "TOKEN_OBTAIN_SERIALIZER": "user.api.serializer.CustmoTokenObtainPairSerializer"
+}
+
+
+
+# Internationalization
+# https://docs.djangoproject.com/en/5.1/topics/i18n/
+
+LANGUAGE_CODE = 'es'
 
 TIME_ZONE = 'UTC'
 
@@ -120,6 +142,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = 'static/'
+
+#Use own user
+AUTH_USER_MODEL = 'user.User'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
