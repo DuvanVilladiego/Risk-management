@@ -1,7 +1,6 @@
 
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import App from "../App";
-import { AuthForm } from '../pages';
+import { AuthForm, HomePage } from '../pages';
 
 const AppRouter = () => {
   return (
@@ -9,7 +8,7 @@ const AppRouter = () => {
       <Routes>
         <Route path="/auth/register" element={<AuthForm isLogin={false}/>} />
         <Route path="/auth/login" element={<AuthForm isLogin/>} />
-        <Route path="/check-code" element={<App/>} />
+        <Route path="/" element={<HomePage/>} />
       </Routes>
     </Router>
   );
