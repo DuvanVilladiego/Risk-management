@@ -39,9 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'drf_yasg',
     'rest_framework',
-    'people',
+    'user',
     'assets',
-    'entity',
 ]
 
 MIDDLEWARE = [
@@ -145,7 +144,7 @@ USE_TZ = True
 STATIC_URL = 'static/'
 
 #Use own user
-AUTH_USER_MODEL = 'people.User'
+AUTH_USER_MODEL = 'user.User'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field

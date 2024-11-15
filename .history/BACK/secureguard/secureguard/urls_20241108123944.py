@@ -22,6 +22,7 @@ from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 from assets.api.router import router_asset
 from entity.api.router import router_entity
+from people.api.router import router_people
 
 # Import for connection to drf-yasg
 schema_view = get_schema_view(
@@ -39,7 +40,7 @@ schema_view = get_schema_view(
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("api/", include('people.api.router')),
+    path("api/", include("people.api.router")),
     path("api/", include(router_asset.urls)),
     path("api/", include(router_entity.urls)),
     path(

@@ -1,7 +1,8 @@
-from django.db import models
 from django.core.exceptions import ValidationError
+from django.db import models
 
 
+# Create your models here.
 class Assets(models.Model):
     
     id = models.AutoField(primary_key=True, db_column="assetid")

@@ -1,7 +1,8 @@
-from django.db import models
 from django.core.exceptions import ValidationError
+from django.db import models
 
 
+# Create your models here.
 class Assets(models.Model):
     
     id = models.AutoField(primary_key=True, db_column="assetid")
@@ -19,7 +20,7 @@ class Assets(models.Model):
     price = models.DecimalField(
         max_digits=8, decimal_places=2, null=False, db_column="assetcost"
     )
-    entity_id = models.IntegerField(null=False, db_column='entityid')
+    entityId = models.IntegerField(null=False, db_column='entityid')
 
 
 

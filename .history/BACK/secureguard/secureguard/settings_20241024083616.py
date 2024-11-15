@@ -39,9 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'drf_yasg',
     'rest_framework',
-    'people',
+    'user',
     'assets',
-    'entity',
 ]
 
 MIDDLEWARE = [
@@ -80,10 +79,10 @@ WSGI_APPLICATION = 'secureguard.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'secureguard',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'secureguardcore',
         'USER': 'postgres',
-        'PASSWORD': 'sasa123',
+        'PASSWORD': 'admin',
         'HOST': 'localhost',
         'PORT': '5432'
     }
@@ -145,7 +144,7 @@ USE_TZ = True
 STATIC_URL = 'static/'
 
 #Use own user
-AUTH_USER_MODEL = 'people.User'
+AUTH_USER_MODEL = 'user.User'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
