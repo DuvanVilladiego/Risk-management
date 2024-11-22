@@ -2,14 +2,30 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Icon } from "../utils/getIconByName";
 import { Link } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import axios from "axios";
 
 interface AuthFormProps {
   isLogin: boolean;
 }
 
+interface FormData {
+  fullName?: string;
+  email: string;
+  password: string;
+}
+
 export const AuthForm = ({ isLogin }: AuthFormProps) => {
   const [showPassword, setShowPassword] = useState(false);
   const [backPosition, setBackPosition] = useState({ x: 0, y: 0 });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [apiError, setApiError] = useState<string | null>(null);
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormData>();
 
   useEffect(() => {
     const handleMouseMovement = (e: MouseEvent) => {
@@ -21,6 +37,25 @@ export const AuthForm = ({ isLogin }: AuthFormProps) => {
     window.addEventListener("mousemove", handleMouseMovement);
     return () => window.removeEventListener("mousemove", handleMouseMovement);
   }, []);
+
+  const onSubmit = async (data: FormData) => {
+    setIsSubmitting(true);
+    setApiError(null);
+    try {
+      const endpoint = isLogin ? "/api/login/" : "/api/register/";
+      const response = await axios.post(endpoint, data);
+      console.log("Success:", response.data);
+      // Handle successful login/registration (e.g., store token, redirect)
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        setApiError(error.response.data.message || "An error occurred");
+      } else {
+        setApiError("An unexpected error occurred");
+      }
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <div
@@ -60,6 +95,7 @@ export const AuthForm = ({ isLogin }: AuthFormProps) => {
               exit={{ x: -300, opacity: 0 }}
               transition={{ type: "spring", stiffness: 100, damping: 15 }}
               className="space-y-6 w-full max-w-md"
+              onSubmit={handleSubmit(onSubmit)}
             >
               {!isLogin && (
                 <div className="relative">
@@ -71,8 +107,12 @@ export const AuthForm = ({ isLogin }: AuthFormProps) => {
                   <input
                     type="text"
                     placeholder="Nombre Completo"
+                    {...register("fullName", { required: "Nombre es requerido" })}
                     className="w-full pl-10 pr-4 py-3 bg-white bg-opacity-20 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-300 text-white placeholder-teal-200"
                   />
+                  {errors.fullName && (
+                    <p className="text-red-300 text-sm mt-1">{errors.fullName.message}</p>
+                  )}
                 </div>
               )}
               <div className="relative">
@@ -84,8 +124,18 @@ export const AuthForm = ({ isLogin }: AuthFormProps) => {
                 <input
                   type="email"
                   placeholder="Correo Electrónico"
+                  {...register("email", { 
+                    required: "Email es requerido",
+                    pattern: {
+                      value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                      message: "Email inválido"
+                    }
+                  })}
                   className="w-full pl-10 pr-4 py-3 bg-white bg-opacity-20 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-300 text-white placeholder-teal-200"
                 />
+                {errors.email && (
+                  <p className="text-red-300 text-sm mt-1">{errors.email.message}</p>
+                )}
               </div>
               <div className="relative">
                 <Icon
@@ -96,6 +146,13 @@ export const AuthForm = ({ isLogin }: AuthFormProps) => {
                 <input
                   type={showPassword ? "text" : "password"}
                   placeholder="Contraseña"
+                  {...register("password", { 
+                    required: "Contraseña es requerida",
+                    minLength: {
+                      value: 8,
+                      message: "La contraseña debe tener al menos 8 caracteres"
+                    }
+                  })}
                   className="w-full pl-10 pr-12 py-3 bg-white bg-opacity-20 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-300 text-white placeholder-teal-200"
                 />
                 <button
@@ -109,13 +166,21 @@ export const AuthForm = ({ isLogin }: AuthFormProps) => {
                     <Icon name="FaEye" library="fa" className="text-lg" />
                   )}
                 </button>
+                {errors.password && (
+                  <p className="text-red-300 text-sm mt-1">{errors.password.message}</p>
+                )}
               </div>
+              {apiError && (
+                <p className="text-red-300 text-sm">{apiError}</p>
+              )}
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 className="w-full py-3 bg-gradient-to-r from-teal-400 to-teal-600 text-white font-bold rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
+                type="submit"
+                disabled={isSubmitting}
               >
-                {isLogin ? "Iniciar Sesión" : "Registrarse"}
+                {isSubmitting ? "Procesando..." : (isLogin ? "Iniciar Sesión" : "Registrarse")}
               </motion.button>
             </motion.form>
           </AnimatePresence>
@@ -208,3 +273,4 @@ export const AuthForm = ({ isLogin }: AuthFormProps) => {
     </div>
   );
 };
+
